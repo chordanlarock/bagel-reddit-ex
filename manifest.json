@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "r all button",
-  "version": "0.0.0.2",
-  "description": "Add r/all button to reddit top of pages",
+  "name": "Bagel Reddit EX",
+  "version": "0.0.0.3",
+  "description": "Various fixes & improvements to reddit interface",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
@@ -14,7 +14,14 @@
       "js": ["scripts/content.js"],
       "matches": [
         "https://www.reddit.com/*"
-      ]
+      ],
+      "run_at": "document_end"
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{70e440c8-f006-4a05-83d7-f156477c4b31}",
+      "strict_min_version": "42.0"
+    }
+  }
 }

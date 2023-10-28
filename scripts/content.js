@@ -6,7 +6,7 @@ const containerId = 'bagel-container'
 
 const header = document.querySelector('header');
 
-function insert() {
+function insertRALLBtn() {
   const popularBtn = document.querySelector(selector);
   const popularBtnContainer = popularBtn?.parentElement;
   if (popularBtnContainer) {
@@ -28,29 +28,80 @@ function insert() {
   }
 }
 
-insert();
+insertRALLBtn();
 
 if (header) {
-  const observer = new MutationObserver(_mutations => {
+  const headerObserver = new MutationObserver(_mutations => {
     try {
       if (document.querySelector(selector) && !document.querySelector("[href='/r/all/']")) {
         console.log('found popular button');
-        insert();
+        insertRALLBtn();
         count++;
         if (document.querySelectorAll('#' + containerId).length || count > 50) {
           console.log('dc');
-          observer.disconnect();
+          headerObserver.disconnect();
         }
       }
     } catch (e) {
-      console.warn(e);
-      observer.disconnect();
+      console.error("BAGEL PLUGIN ERROR: /ALL BTN");
+      console.error(e);
+      headerObserver.disconnect();
     }
   });
 
-  observer.observe(document.querySelector('header'), {
+  headerObserver.observe(document.querySelector('header'), {
     childList: true,
     subtree: true,
   });
 }
 
+
+const bodyObserver = new MutationObserver(_mutations => {
+  checkImgViewer();
+});
+
+bodyObserver.observe(document.documentElement, {
+  childList: true,
+  subtree: true
+});
+console.log("OBSERVING");
+
+// const icons = document.querySelectorAll("i.icon.icon-expand");
+// icons.forEach(expander => {
+//   const expandImgObserver = new MutationObserver(checkImgViewer);
+//   expandImgObserver.observe(expander, {
+//     childList: false,
+//     subtree: false,
+//     attributes: true,
+//     characterData: false
+//   });
+// });
+
+
+function checkImgViewer() {
+  try {
+    const albumElems = document.querySelectorAll("figure");
+
+    if (albumElems.length) { //albums to be fixed
+      console.log(albumElems);
+
+      albumElems.forEach(ae => {
+        const imgElem = ae.querySelector("img");
+        if (imgElem) {
+          const isStyled_DumbCheck = imgElem.style["max-height"] === "100%" && imgElem.style["max-width"] === "100%";
+          if (!isStyled_DumbCheck) {
+            console.log(imgElem);
+            imgElem.style["max-height"] = "100%";
+            imgElem.style["max-width"] = "100%";
+            const imgContainer = imgElem.parentElement;
+            imgContainer.style.height = "inherit";
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.error("BAGEL PLUGIN ERROR: IMG VIEWER");
+    console.error(e);
+    expandImgObserver.disconnect();
+  }
+}
